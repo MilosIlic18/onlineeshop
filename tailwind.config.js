@@ -12,7 +12,8 @@ export default {
         ligthGray:'#F4F4F4',
         textWhite:'#FFF',
         textDark:'#292D32',
-        ligthBlue:'#B3D4E5'
+        ligthBlue:'#B3D4E5',
+        grayColor:'#B6B6B6'
       }
     },
   },

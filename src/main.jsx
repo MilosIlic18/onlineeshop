@@ -13,6 +13,7 @@ import {Provider} from 'react-redux'
 import store from './store/store.js'
 // pages
 import HomePage from './pages/HomePage.jsx'
+import SingleProductPage from './pages/SingleProductPage.jsx'
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -26,7 +27,8 @@ const router = createBrowserRouter([
     path:'/', element:<AppLayout/>,
     errorElement:<div>Error Page</div>,
     children:[
-      {path:'/',element:<HomePage/>}
+      {path:'/',element:<HomePage/>},
+      {path:'/singleProduct/:id', element:<SingleProductPage/>}
     ]
   }]
 )

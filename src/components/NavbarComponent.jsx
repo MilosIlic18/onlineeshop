@@ -1,4 +1,5 @@
 import logo from '../assets/logo.png'
+import { Link } from 'react-router'
 // clerk
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 // icons
@@ -8,7 +9,7 @@ function NavbarComponent() {
   return (
     <div className='bg-mainBlue flex gap-[10px] items-center py-[10px] md:h-[100px]'>
         <div className='container mx-auto p-3 flex gap-[10px] justify-between items-center flex-col md:flex-row md:h-[100px] md:p-0'>
-            <img src={logo} alt="Greska" />
+            <Link to='/'><img src={logo} alt="Greska" /></Link>
             
             {/* search bar */}
             <div className="flex bg-textWhite rounded-[20px]">
