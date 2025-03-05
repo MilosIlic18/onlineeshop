@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams } from 'react-router'
+import { Link, useParams } from 'react-router'
 // service
 import ProductService from "../services/ProductService"
 
@@ -9,22 +9,34 @@ import { RxCross1 } from "react-icons/rx";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { FaShippingFast } from "react-icons/fa";
 
+// mat UI
 import Rating from '@mui/material/Rating';
+
+// redux
+import { useDispatch } from 'react-redux'
+import { saveInCartAction } from "../store/cartSlice";
 
 function SingleProductPage() {
     const [quantity,setQuantity] = useState(1)
     const [singleProduct,setSingleProduct] = useState({})
     const [currentImage,setCurrentImage] = useState(0)
     const [isLoading,setIsLoading] = useState(false)
+    const dispatch = useDispatch()
     let {id} = useParams()
 
+    function quantityDecrement(){
+        if(quantity>1)setQuantity(quantity-1)
+    }
+    function quantityIncrement(){
+        if(quantity<singleProduct.stock)setQuantity(quantity+1)
+    }
     useEffect(()=>{
         ProductService.getSingleProduct(id)
         .then(res=>{setSingleProduct(res.data),setIsLoading(true)})
         .catch(err=>console.log(err))
     },[])
   return (
-    <div className="px-[20px]">
+    <div className="px-[20px] my-[20px]">
       {isLoading?<div className="container mx-auto flex flex-col gap-[10px] md:gap-0 md:flex-row">
             {/* left side */}
             <div className="w-full md:w-[50%]">
@@ -34,7 +46,7 @@ function SingleProductPage() {
                 </div>
             </div>
             {/* right side */}
-            <div className="w-full md:w-[50%] flex flex-col gap-[10px]">
+            <div className="w-full md:w-[50%] flex flex-col px-[15px] md:px-0 gap-[10px]">
                 <h2 className="text-mainBlue text-[36px]">{singleProduct.title}</h2>
                 <h5 className="font-semibold text-[20px]">${singleProduct.price}</h5>
                 <Rating name="read-only" value={singleProduct.rating} readOnly size="large"/>
@@ -57,14 +69,14 @@ function SingleProductPage() {
                     <span className="text-gray-500">Quantity:</span>
 
                     <div className="flex items-center">
-                        <button className="px-[10px] py-[4px] bg-ligthGray text-gray-500 border border-gray-500">-</button>
-                        <span className="px-[20px] py-[4px] bg-ligthGray text-gray-500 border border-gray-500">{quantity}</span>
-                        <button className="px-[10px] py-[4px] bg-ligthGray text-gray-500 border border-gray-500">+</button>
+                        <button className="px-[10px] py-[4px] bg-ligthGray text-gray-500 border border-gray-500" onClick={quantityDecrement}>-</button>
+                        <span className="px-[20px] py-[4px] bg-ligthGray text-gray-500 border border-b-gray-500 border-t-gray-500">{quantity}</span>
+                        <button className="px-[10px] py-[4px] bg-ligthGray text-gray-500 border border-gray-500" onClick={quantityIncrement}>+</button>
                     </div>
                 </div>
                 
                 <div className="flex items-center mt-[30px] gap-[20px]">
-                    <button className="bg-mainYellow text-textWhite px-[26px] py-[13px] rounded-lg"> Add To Card</button>
+                    <Link to='/cart' onClick={()=>{dispatch(saveInCartAction({...singleProduct,quantity}))}} className="bg-mainYellow text-textWhite px-[26px] py-[13px] rounded-lg"> Add To Card</Link>
                     <div className="bg-[#EEE] p-[10px] rounded-full">
                         <IoIosHeartEmpty size={30} />
                     </div>

@@ -4,8 +4,15 @@ import { Link } from 'react-router'
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
 // icons
 import { CiUser, CiHeart, CiShoppingCart } from "react-icons/ci"
+// redux
+import { useSelector } from 'react-redux'
+import { useEffect, useState } from 'react';
 
 function NavbarComponent() {
+  const [ totalProductLC,setTotalProductLC] = useState(0)
+  useEffect(()=>{
+    setTotalProductLC(JSON.parse(localStorage.getItem('totalProduct'))||0)
+  },[JSON.parse(localStorage.getItem('totalProduct'))])
   return (
     <div className='bg-mainBlue flex gap-[10px] items-center py-[10px] md:h-[100px]'>
         <div className='container mx-auto p-3 flex gap-[10px] justify-between items-center flex-col md:flex-row md:h-[100px] md:p-0'>
@@ -28,7 +35,7 @@ function NavbarComponent() {
                 </SignedIn>
                 </div>
                 <div className="flex gap-[5px] items-center"><CiHeart size={25}/> <span className="bg-mainYellow w-[20px] h-[20px] flex items-center justify-center rounded-full">0</span> <span>Favourite</span></div>
-                <div className="flex gap-[5px] items-center"><CiShoppingCart size={25}/> <span className="bg-mainYellow w-[20px] h-[20px] flex items-center justify-center rounded-full">0</span> <span>Cart</span></div>
+                <div className="flex gap-[5px] items-center"><CiShoppingCart size={25}/> <span className="bg-mainYellow w-[20px] h-[20px] flex items-center justify-center rounded-full">{totalProductLC}</span> <Link to='/cart'>Cart</Link></div>
             </div>
         </div>
     </div>
