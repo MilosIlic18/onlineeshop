@@ -9,10 +9,17 @@ import { useSelector } from 'react-redux'
 import { useEffect, useState } from 'react';
 
 function NavbarComponent() {
+  const { cart } =useSelector(state=>state.cartStore)
+  const { allFavoriteProduct } =useSelector(state=>state.favoriteStore)
   const [ totalProductLC,setTotalProductLC] = useState(0)
+  
+  const [ totalFavouriteProductLC,setTotalFavouriteProductLC] = useState(0)
   useEffect(()=>{
     setTotalProductLC(JSON.parse(localStorage.getItem('totalProduct'))||0)
-  },[JSON.parse(localStorage.getItem('totalProduct'))])
+  },[(JSON.parse(localStorage.getItem('cart'))||[]).length])
+  useEffect(()=>{
+    setTotalFavouriteProductLC(JSON.parse(localStorage.getItem('favoriteTotalProducts'))||0)
+  },[(JSON.parse(localStorage.getItem('allFavoriteProduct'))||[]).length])
   return (
     <div className='bg-mainBlue flex gap-[10px] items-center py-[10px] md:h-[100px]'>
         <div className='container mx-auto p-3 flex gap-[10px] justify-between items-center flex-col md:flex-row md:h-[100px] md:p-0'>
@@ -34,7 +41,8 @@ function NavbarComponent() {
                   <UserButton showName />
                 </SignedIn>
                 </div>
-                <div className="flex gap-[5px] items-center"><CiHeart size={25}/> <span className="bg-mainYellow w-[20px] h-[20px] flex items-center justify-center rounded-full">0</span> <span>Favourite</span></div>
+                <div className="flex gap-[5px] items-center"><CiHeart size={25}/> 
+                  <span className="bg-mainYellow w-[20px] h-[20px] flex items-center justify-center rounded-full">{totalFavouriteProductLC}</span> <Link to='/favorite'>Favorite</Link></div>
                 <div className="flex gap-[5px] items-center"><CiShoppingCart size={25}/> <span className="bg-mainYellow w-[20px] h-[20px] flex items-center justify-center rounded-full">{totalProductLC}</span> <Link to='/cart'>Cart</Link></div>
             </div>
         </div>

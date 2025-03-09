@@ -15,6 +15,8 @@ import store from './store/store.js'
 import HomePage from './pages/HomePage.jsx'
 import SingleProductPage from './pages/SingleProductPage.jsx'
 import CartPage from './pages/CartPage.jsx'
+import FavoritePage from './pages/FavoritePage.jsx'
+import NotFoundPage from './pages/NotFoundPage.jsx'
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
 
@@ -25,11 +27,12 @@ if (!PUBLISHABLE_KEY) {
 const router = createBrowserRouter([
   {
     path:'/', element:<AppLayout/>,
-    errorElement:<div>Error Page</div>,
+    errorElement:<NotFoundPage/>,
     children:[
       {path:'/',element:<HomePage/>},
       {path:'/singleProduct/:id', element:<SingleProductPage/>},
-      {path:'/cart',element:<CartPage/>}
+      {path:'/cart',element:<CartPage/>},
+      {path:'/favorite',element:<FavoritePage/>}
     ]
   }]
 )

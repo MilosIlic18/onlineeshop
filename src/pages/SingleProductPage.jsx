@@ -6,22 +6,28 @@ import ProductService from "../services/ProductService"
 // icons
 import { FaCheck } from "react-icons/fa6";
 import { RxCross1 } from "react-icons/rx";
-import { IoIosHeartEmpty } from "react-icons/io";
+import { IoIosHeartEmpty,IoIosHeart } from "react-icons/io";
 import { FaShippingFast } from "react-icons/fa";
 
 // mat UI
 import Rating from '@mui/material/Rating';
 
 // redux
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { saveInCartAction } from "../store/cartSlice";
+import { updateFavouriteProductsAction } from "../store/favoriteSlice";
 
 function SingleProductPage() {
     const [quantity,setQuantity] = useState(1)
     const [singleProduct,setSingleProduct] = useState({})
     const [currentImage,setCurrentImage] = useState(0)
+    const [isFavorite,setIsFavorite] = useState(false)
     const [isLoading,setIsLoading] = useState(false)
+    
     const dispatch = useDispatch()
+    const {allFavoriteProduct} = useSelector(state=>state.favoriteStore)
+
+
     let {id} = useParams()
 
     function quantityDecrement(){
@@ -32,9 +38,14 @@ function SingleProductPage() {
     }
     useEffect(()=>{
         ProductService.getSingleProduct(id)
-        .then(res=>{setSingleProduct(res.data),setIsLoading(true)})
+        .then(res=>{
+            const findIndex = (JSON.parse(localStorage.getItem('allFavoriteProduct'))||[]).findIndex(product=>product.id === res.data.id)
+            findIndex===-1?setIsFavorite(false):setIsFavorite(true)
+            setSingleProduct(res.data),
+            setIsLoading(true)
+        })
         .catch(err=>console.log(err))
-    },[])
+    },[(JSON.parse(localStorage.getItem('allFavoriteProduct'))||[]).length])
   return (
     <div className="px-[20px] my-[20px]">
       {isLoading?<div className="container mx-auto flex flex-col gap-[10px] md:gap-0 md:flex-row">
@@ -78,7 +89,12 @@ function SingleProductPage() {
                 <div className="flex items-center mt-[30px] gap-[20px]">
                     <Link to='/cart' onClick={()=>{dispatch(saveInCartAction({...singleProduct,quantity}))}} className="bg-mainYellow text-textWhite px-[26px] py-[13px] rounded-lg"> Add To Card</Link>
                     <div className="bg-[#EEE] p-[10px] rounded-full">
-                        <IoIosHeartEmpty size={30} />
+                        {isFavorite?
+                            <IoIosHeart size={30} color="red" onClick={()=>dispatch(updateFavouriteProductsAction(singleProduct))} className="cursor-pointer" />
+                            :
+                            <IoIosHeartEmpty size={30} color="red" onClick={()=>dispatch(updateFavouriteProductsAction(singleProduct))} className="cursor-pointer" />
+                        }
+                        
                     </div>
                 </div>
                 <hr className="my-[20px]"/>

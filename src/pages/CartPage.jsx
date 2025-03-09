@@ -5,14 +5,23 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteFromCartAction, handleQuantityChangeAction } from '../store/cartSlice';
+import { useEffect, useState } from 'react';
 function CartPage() {
   const cart = JSON.parse(localStorage.getItem('cart'))
-  function quantityDecrement(product){
-    if(product.quantity>1)product.quantity--
-}
-function quantityIncrement(product){
-    if(product.quantity<product.stock)product.quantity++
-}
+  const {totalPriceProducts} = useSelector(state=>state.cartStore)
+  const [totalProductsPrice,setTotalProductsPrice] = useState(0)
+  const dispatch = useDispatch()
+  function handleRemoveProduct(product){
+    dispatch(deleteFromCartAction(product))
+  }
+  function handleQuantityChange(product,op){
+    dispatch(handleQuantityChangeAction({product,op}))
+  }
+  useEffect(()=>{
+    setTotalProductsPrice(JSON.parse(localStorage.getItem('totalPriceProducts'))||0)
+  },[totalPriceProducts])
   return (
     <div className='mt-[50px]'>
       <div className="container mx-auto flex flex-col md:flex-row gap-[10px]">
@@ -28,7 +37,7 @@ function quantityIncrement(product){
               </TableRow>
             </TableHead>
             <TableBody>
-              {cart && cart.map((product) => (
+              {cart && cart.map(product => (
                 <TableRow
                   key={product.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -42,14 +51,14 @@ function quantityIncrement(product){
                   <TableCell align="left">{product.price}</TableCell>
                   <TableCell align="left">
                     <div className="flex items-center">
-                        <button className="px-[10px] py-[4px] bg-slate-300 text-gray-500 border border-gray-500" onClick={()=>quantityDecrement(product)}>-</button>
+                        <button className="px-[10px] py-[4px] bg-slate-300 text-gray-500 border border-gray-500" onClick={()=>handleQuantityChange(product,'dec')}>-</button>
                         <span className="px-[20px] py-[4px] bg-slate-300 text-gray-500 border border-b-gray-500 border-t-gray-500">{product.quantity}</span>
-                        <button className="px-[10px] py-[4px] bg-slate-300 text-gray-500 border border-gray-500" onClick={()=>quantityIncrement(product)}>+</button>
+                        <button className="px-[10px] py-[4px] bg-slate-300 text-gray-500 border border-gray-500" onClick={()=>handleQuantityChange(product,'inc')}>+</button>
                       </div>
                   </TableCell>
-                  <TableCell align="right">${product.quantity*product.totalPriceProduct}</TableCell>
+                  <TableCell align="right">${product.totalPriceProduct.toFixed(2)}</TableCell>
                   <TableCell align="right">
-                    <button className='text-red-500'>Remove</button>
+                    <button className='text-red-500' onClick={()=>handleRemoveProduct(product)}>Remove</button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -57,7 +66,10 @@ function quantityIncrement(product){
           </Table>
         </TableContainer>
         <div  className='w-full md:w-[30%]'>
-          <h2 className='bg-mainBlue text-textWhite py-[15px] px-[5px] font-semibold'>CART TOTAL:</h2>
+          <div className='flex gap-[10px] bg-mainBlue items-center text-textWhite font-semibold'>
+            <h2 className='py-[15px] px-[5px]'>CART TOTAL:</h2>
+            <span className='py-[15px] px-[5px]'>${totalProductsPrice.toFixed(2)}</span>
+          </div>
         </div>
       </div>
     </div>
