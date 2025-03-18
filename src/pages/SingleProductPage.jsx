@@ -87,7 +87,11 @@ function SingleProductPage() {
                 </div>
                 
                 <div className="flex items-center mt-[30px] gap-[20px]">
-                    <Link to='/cart' onClick={()=>{dispatch(saveInCartAction({...singleProduct,quantity}))}} className="bg-mainYellow text-textWhite px-[26px] py-[13px] rounded-lg"> Add To Card</Link>
+                    { quantity<singleProduct.stock?
+                        <Link to='/cart' onClick={()=>{dispatch(saveInCartAction({...singleProduct,quantity}))}} className="bg-mainYellow text-textWhite px-[26px] py-[13px] rounded-lg"> Add To Card</Link>
+                        :
+                        <button  className="bg-mainYellow text-textWhite px-[26px] py-[13px] rounded-lg opacity-80 cursor-auto">Add To Card</button>
+                    }
                     <div className="bg-[#EEE] p-[10px] rounded-full">
                         {isFavorite?
                             <IoIosHeart size={30} color="red" onClick={()=>dispatch(updateFavouriteProductsAction(singleProduct))} className="cursor-pointer" />

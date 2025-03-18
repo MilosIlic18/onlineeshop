@@ -6,6 +6,7 @@ import axios from 'axios'
 import HeaderComponent from './components/HeaderComponent'
 import NavbarComponent from './components/NavbarComponent'
 import CategoryComponent from './components/CategoryComponent'
+import FooterComponent from './components/FooterComponent'
 
 
 axios.defaults.baseURL = 'https://dummyjson.com'
@@ -17,7 +18,10 @@ function AppLayout() {
       {activeHeader && <HeaderComponent setActiveHeader={setActiveHeader} />}
       <NavbarComponent />
       <CategoryComponent />
-      <Outlet/>
+      <div className='min-h-screen'>
+        <Outlet/>
+      </div>
+      <FooterComponent/>
     </div>
   )
 }
